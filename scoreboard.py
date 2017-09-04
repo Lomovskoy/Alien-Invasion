@@ -13,8 +13,8 @@ class Scoreboard():
         self.stats = stats
         
         # Настройки шрифта для вывода счета.
-        self.text_color = (30, 30, 30)
-        self.font = pygame.font.SysFont(None, 48)
+        self.text_color = (168,0,219)
+        self.font = pygame.font.Font("font/main_font.ttf",30)
         
         # Подготовка исходного изображения.
         self.prep_score()

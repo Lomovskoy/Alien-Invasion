@@ -221,6 +221,8 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets, sc):
         sleep(0.5)
 
     else:
+        #Запись рекорда
+        save_record(stats)
         stats.game_active = False
         pygame.mouse.set_visible(True)
 
