@@ -6,6 +6,7 @@ from settings import Settings
 from pygame.sprite import Group
 from game_stats import GameStats
 from scoreboard import Scoreboard
+from sound_controll import SoundControll as SC
 
 def run_game():
     # Инициализирует pygame, settings и объект экрана.
@@ -17,10 +18,16 @@ def run_game():
                                       ai_settings.screen_height))
     pygame.display.set_caption("Alien Invasion")
 
+    #Загрузка музыки и звуков
+    sc = SC()
     # Создание кнопки Play.
     play_button = Button(ai_settings, screen, "Play")
+    #Воспроизведение музыки
+    sc.play_music()
     # Создание экземпляра для хранения игровой статистики.
     stats = GameStats(ai_settings)
+    # Чтение прежнего рекорда
+    gf.load_record(stats)
     # Создание экземпляров GameStats и Scoreboard.
     sb = Scoreboard(ai_settings, screen, stats)
     # Создание корабля.
@@ -37,7 +44,7 @@ def run_game():
         
         # Отслеживание событий клавиатуры и мыши.
         gf.check_events(ai_settings, screen, stats, sb, play_button, ship,
-                        aliens, bullets)
+                        aliens, bullets, sc)
 
         if stats.game_active:
             #Обновление позиции корабля и пули
@@ -46,11 +53,11 @@ def run_game():
 
             # Удаление пуль, вышедших за край экрана.
             gf.update_bullets(ai_settings, screen, stats, sb, ship, aliens,
-                                bullets)
+                                bullets, sc)
             
             #Обновление пришельцев
             gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens,
-                                bullets)        
+                                bullets, sc)        
         # Отображение последнего прорисованного экрана.
         gf.update_screen(ai_settings, screen, stats, sb, ship,
                             aliens, bullets, play_button)

@@ -3,7 +3,7 @@ from bullet import Bullet
 from alien import Alien
 from time import sleep
 
-def check_keydown_events(event, ai_settings, screen, ship, bullets):
+def check_keydown_events(event, ai_settings, screen, ship, bullets, stats, sc):
     """Реагирует на нажатие клавиш."""
     if event.key == pygame.K_RIGHT:
         #Остановка корабля 
@@ -13,13 +13,18 @@ def check_keydown_events(event, ai_settings, screen, ship, bullets):
         ship.moving_left = True
     elif event.key == pygame.K_SPACE:
         # Создание новой пули и включение ее в группу bullets.
-        fire_bullet(ai_settings, screen, ship, bullets)
+        fire_bullet(ai_settings, screen, ship, bullets, sc)
     elif event.key == pygame.K_q:
+        #Запись рекорда
+        save_record(stats)
         sys.exit()
             
-def fire_bullet(ai_settings, screen, ship, bullets):
+def fire_bullet(ai_settings, screen, ship, bullets, sc):
     """Выпускает пулю, если максимум еще не достигнут."""
     if len(bullets) < ai_settings.bullets_allowed:
+        #Звук выстрела
+        sc.play_shot()
+        #Создание пули
         new_bullet = Bullet(ai_settings, screen, ship)
         bullets.add(new_bullet)
             
@@ -33,16 +38,20 @@ def check_keyup_events(event, ship):
         ship.moving_left = False
         
 def check_events(ai_settings, screen, stats, sb, play_button, ship, aliens,
-                                                                    bullets):
+                 bullets, sc):
     """Обрабатывает нажатия клавиш и события мыши."""
     for event in pygame.event.get():
-        #Если нажат крестик, выйти из программы
+        #Если нажат крестик
         if event.type == pygame.QUIT:
+            #Запись рекорда
+            save_record(stats)
+            #выйти из программы
             sys.exit()
 
         #Перемещение корабля
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, ai_settings, screen, ship, bullets)
+            check_keydown_events(event, ai_settings, screen, ship,
+                                 bullets, stats, sc)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -105,7 +114,7 @@ def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets,
     pygame.display.flip()
 
 
-def update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets):
+def update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets, sc):
     """Обновляет позиции пуль и уничтожает старые пули."""
     # Обновление позиций пуль.
     bullets.update()
@@ -115,16 +124,18 @@ def update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets):
             bullets.remove(bullet)
 
     check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship,
-                                    aliens, bullets)
+                                    aliens, bullets, sc)
   
 def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship,
-                                    aliens, bullets):
+                                    aliens, bullets, sc):
     """Обработка коллизий пуль с пришельцами."""
     # Удаление пуль и пришельцев, участвующих в коллизиях.
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
     
     if collisions:
         for aliens in collisions.values():
+            #Звук выстрела
+            sc.play_target_shooting()
             stats.score += ai_settings.alien_points * len(aliens)
         sb.prep_score()
         check_high_score(stats, sb)
@@ -186,9 +197,12 @@ def change_fleet_direction(ai_settings, aliens):
         alien.rect.y += ai_settings.fleet_drop_speed
     ai_settings.fleet_direction *= -1
 
-def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets):
+def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets, sc):
     """Обрабатывает столкновение корабля с пришельцем."""
     if stats.ships_left > 0:
+        #Звук удара
+        sc.play_hit_player()
+        
         # Уменьшение ships_left.
         stats.ships_left -= 1
 
@@ -210,16 +224,16 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets):
         stats.game_active = False
         pygame.mouse.set_visible(True)
 
-def check_aliens_bottom(ai_settings, screen, stats, sb, ship, aliens, bullets):
+def check_aliens_bottom(ai_settings, screen, stats, sb, ship, aliens, bullets, sc):
     """Проверяет, добрались ли пришельцы до нижнего края экрана."""
     screen_rect = screen.get_rect()
     for alien in aliens.sprites():
         if alien.rect.bottom >= screen_rect.bottom:
             # Происходит то же, что при столкновении с кораблем.
-            ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets)
+            ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets, sc)
             break
 
-def update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets):
+def update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets, sc):
     """Проверяет, достиг ли флот края экрана,
     после чего обновляет позиции всех пришельцев во флоте."""
     check_fleet_edges(ai_settings, aliens)
@@ -227,13 +241,31 @@ def update_aliens(ai_settings, screen, stats, sb, ship, aliens, bullets):
     
     # Проверка коллизий "пришелец-корабль".
     if pygame.sprite.spritecollideany(ship, aliens):
-        ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets)
+        ship_hit(ai_settings, screen, stats, sb, ship, aliens, bullets, sc)
 
     # Проверка пришельцев, добравшихся до нижнего края экрана.
-    check_aliens_bottom(ai_settings, screen, stats, sb, ship, aliens, bullets)
+    check_aliens_bottom(ai_settings, screen, stats, sb, ship, aliens, bullets, sc)
 
 def check_high_score(stats, sb):
     """Проверяет, появился ли новый рекорд."""
     if stats.score > stats.high_score:
         stats.high_score = stats.score
         sb.prep_high_score()
+
+def save_record(stats):
+    #print("Запись рекорда")
+    filename = 'record/record.txt'
+    #Читаем из файла
+    with open(filename) as file_object:
+        contents = file_object.read()
+        #Усли считанный чекорд больше 
+        if int(contents) < stats.score:
+            with open(filename, 'w') as file_object:
+                file_object.write(str(stats.score))
+
+def load_record(stats):
+    filename = 'record/record.txt'
+    #Читаем из файла
+    with open(filename) as file_object:
+        stats.high_score = int(file_object.read())
+        #print(stats.score)
