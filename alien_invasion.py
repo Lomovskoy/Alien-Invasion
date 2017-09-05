@@ -38,9 +38,15 @@ def run_game():
     aliens = Group()
     # Создание флота пришельцев.
     gf.create_fleet(ai_settings, screen, ship, aliens)
-
+    #Установка частоты кадров
+    clock = pygame.time.Clock()
+    FPS = ai_settings.FPS
+    
     # Запуск основного цикла игры.
     while True:
+        #Ограничение кадров в секкнду
+        clock.tick(FPS)
+        fps = clock.get_fps()
         
         # Отслеживание событий клавиатуры и мыши.
         gf.check_events(ai_settings, screen, stats, sb, play_button, ship,
@@ -60,6 +66,6 @@ def run_game():
                                 bullets, sc)        
         # Отображение последнего прорисованного экрана.
         gf.update_screen(ai_settings, screen, stats, sb, ship,
-                            aliens, bullets, play_button)
+                            aliens, bullets, play_button, fps)
 
 run_game()

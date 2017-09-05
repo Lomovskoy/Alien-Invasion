@@ -23,6 +23,7 @@ class Scoreboard():
         #Уровень
         self.prep_level()
         self.prep_ships()
+        self.drav_fps()
         
     def prep_score(self):
         """Преобразует текущий счет в графическое изображение."""
@@ -43,6 +44,7 @@ class Scoreboard():
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.screen.blit(self.level_image, self.level_rect)
+        self.screen.blit(self.fps_image, self.fps_rect)
         # Вывод кораблей.
         self.ships.draw(self.screen)
         
@@ -77,3 +79,16 @@ class Scoreboard():
             ship.rect.x = 10 + ship_number * ship.rect.width
             ship.rect.y = 10
             self.ships.add(ship)
+            
+    def drav_fps(self, fps = 0):
+        
+        if self.ai_settings.fps_on:
+            
+            self.fps_image = self.font.render('FPS: '+str(int(fps)),
+                            True,self.text_color, self.ai_settings.bg_color)
+            
+            # Уровень выводится под текущим счетом.
+            self.fps_rect = self.fps_image.get_rect()
+            self.fps_rect.x = 200
+            self.fps_rect.y = 20
+            

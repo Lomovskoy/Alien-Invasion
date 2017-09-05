@@ -32,6 +32,10 @@ class Settings():
         # Темп роста стоимости пришельцев
         self.score_scale = 1.5
         self.initialize_dynamic_settings()
+        #Отрисовка кодров в секунду
+        self.fps_on = True
+        #Кадров в секунду
+        self.FPS = 1000
         
     def initialize_dynamic_settings(self):
         """Инициализирует настройки, изменяющиеся в ходе игры."""

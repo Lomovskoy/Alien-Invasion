@@ -89,7 +89,7 @@ def check_play_button(ai_settings, screen, stats, sb, play_button, ship,
         ship.center_ship()
 
 def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets,
-                        play_button):
+                        play_button, fps):
     """Обновляет изображения на экране и отображает новый экран."""
     
     # При каждом проходе цикла перерисовывается экран.
@@ -105,6 +105,8 @@ def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets,
     aliens.draw(screen)
     # Вывод счета.
     sb.show_score()
+    #Вывод кадров в секунду
+    sb.drav_fps(fps)
     
     # Кнопка Play отображается в том случае, если игра неактивна.
     if not stats.game_active:
@@ -271,3 +273,4 @@ def load_record(stats):
     with open(filename) as file_object:
         stats.high_score = int(file_object.read())
         #print(stats.score)
+
