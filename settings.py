@@ -35,7 +35,7 @@ class Settings():
         #Отрисовка кодров в секунду
         self.fps_on = True
         #Кадров в секунду
-        self.FPS = 1000
+        self.FPS = 200
         
     def initialize_dynamic_settings(self):
         """Инициализирует настройки, изменяющиеся в ходе игры."""

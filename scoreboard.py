@@ -89,6 +89,6 @@ class Scoreboard():
             
             # Уровень выводится под текущим счетом.
             self.fps_rect = self.fps_image.get_rect()
-            self.fps_rect.x = 200
-            self.fps_rect.y = 20
+            self.fps_rect.x = 10
+            self.fps_rect.y = 60
             

@@ -89,7 +89,7 @@ def check_play_button(ai_settings, screen, stats, sb, play_button, ship,
         ship.center_ship()
 
 def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets,
-                        play_button, fps):
+                        play_button, fps, ipbox):
     """Обновляет изображения на экране и отображает новый экран."""
     
     # При каждом проходе цикла перерисовывается экран.
@@ -110,8 +110,9 @@ def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets,
     
     # Кнопка Play отображается в том случае, если игра неактивна.
     if not stats.game_active:
+        # прозрачный фон
+        draw_fon(screen)
         play_button.draw_button()
-        
     # Отображение последнего прорисованного экрана.
     pygame.display.flip()
 
@@ -274,3 +275,10 @@ def load_record(stats):
         stats.high_score = int(file_object.read())
         #print(stats.score)
 
+def draw_fon(screen):
+    # Загрузка изображения корабля и получение прямоугольника.
+    image = pygame.image.load('images/background.png')
+    rect = image.get_rect()
+    screen_rect = screen.get_rect()
+        
+    screen.blit(image, rect)
