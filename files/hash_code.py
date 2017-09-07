@@ -4,13 +4,6 @@ import json
 class Encoder():
     '''Класс который шифрует рекорд и отправляет его в json файл
     или разшифровывает и выводит обратно для сравнения'''
-    
-    '''# Передаёт рекорд и ключ если нужно в конструктор
-    def __init__(self, record, key = b''):
-        #Строка для шифрования
-        self.record = record
-        #Ключ для шифрования
-        self.key = key'''
 
     def seve_record(self, record):
         '''Метод шифрования рекорда и сохранения в файл'''
@@ -55,10 +48,3 @@ class Encoder():
         self.record = self.record.decode('utf-8')
         self.record = int(self.record)
         return self.record
-
-'''Тестирование класса'''
-#string_to_encrypt = int(input('Введите строку для шифрования: '))
-#enkoder = Encoder()
-#enkoder.seve_record(string_to_encrypt)
-#string_to_decrypt = enkoder.load_record()
-#print(string_to_decrypt)
