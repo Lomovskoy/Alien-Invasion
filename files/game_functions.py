@@ -2,6 +2,7 @@ import sys, pygame
 from bullet import Bullet
 from alien import Alien
 from time import sleep
+from hash_code import Encoder
 
 def check_keydown_events(event, ai_settings, screen, ship, bullets, stats, sc):
     """Реагирует на нажатие клавиш."""
@@ -89,7 +90,7 @@ def check_play_button(ai_settings, screen, stats, sb, play_button, ship,
         ship.center_ship()
 
 def update_screen(ai_settings, screen, stats, sb, ship, aliens, bullets,
-                        play_button, fps, ipbox):
+                        play_button, fps):
     """Обновляет изображения на экране и отображает новый экран."""
     
     # При каждом проходе цикла перерисовывается экран.
@@ -258,22 +259,35 @@ def check_high_score(stats, sb):
         sb.prep_high_score()
 
 def save_record(stats):
+    #Cоздаём обьект класса кодировшик
+    enkoder = Encoder()
+    #Вызываем метод чтения рекорда
+    record = enkoder.load_record()
+    #Если прочитанный рекорд меньше нынешнего
+    if int(record) < stats.score:
+        #Вызываем метод сохранения рекорда
+        enkoder.seve_record(stats.score)
+    '''   
     #print("Запись рекорда")
-    filename = 'record/record.txt'
+    filename = 'record/record.json'
     #Читаем из файла
     with open(filename) as file_object:
         contents = file_object.read()
         #Усли считанный чекорд больше 
         if int(contents) < stats.score:
             with open(filename, 'w') as file_object:
-                file_object.write(str(stats.score))
-
+                file_object.write(str(stats.score))'''
+    
 def load_record(stats):
-    filename = 'record/record.txt'
+    #Cоздаём обьект класса кодировшик
+    enkoder = Encoder()
+    #Вызываем метод чтения рекорда
+    stats.high_score = enkoder.load_record()
+    
+    '''filename = 'record/record.txt'
     #Читаем из файла
     with open(filename) as file_object:
-        stats.high_score = int(file_object.read())
-        #print(stats.score)
+        stats.high_score = int(file_object.read())'''
 
 def draw_fon(screen):
     # Загрузка изображения корабля и получение прямоугольника.

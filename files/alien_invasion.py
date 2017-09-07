@@ -2,7 +2,6 @@ import pygame
 from ship import Ship
 from button import Button
 import game_functions as gf
-import inputbox as ipbox
 from settings import Settings
 from pygame.sprite import Group
 from game_stats import GameStats
@@ -67,6 +66,6 @@ def run_game():
                                 bullets, sc)        
         # Отображение последнего прорисованного экрана.
         gf.update_screen(ai_settings, screen, stats, sb, ship,
-                            aliens, bullets, play_button, fps, ipbox)
+                            aliens, bullets, play_button, fps)
 
 run_game()
