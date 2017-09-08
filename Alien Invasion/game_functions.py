@@ -3,6 +3,7 @@ from bullet import Bullet
 from alien import Alien
 from time import sleep
 from hash_code import Encoder
+from server_connection import ServerConnection
 
 def check_keydown_events(event, ai_settings, screen, ship, bullets, stats, sc):
     """Реагирует на нажатие клавиш."""
@@ -267,16 +268,6 @@ def save_record(stats):
     if int(record) < stats.score:
         #Вызываем метод сохранения рекорда
         enkoder.seve_record(stats.score)
-    '''   
-    #print("Запись рекорда")
-    filename = 'record/record.json'
-    #Читаем из файла
-    with open(filename) as file_object:
-        contents = file_object.read()
-        #Усли считанный чекорд больше 
-        if int(contents) < stats.score:
-            with open(filename, 'w') as file_object:
-                file_object.write(str(stats.score))'''
     
 def load_record(stats):
     #Cоздаём обьект класса кодировшик
@@ -284,10 +275,6 @@ def load_record(stats):
     #Вызываем метод чтения рекорда
     stats.high_score = enkoder.load_record()
     
-    '''filename = 'record/record.txt'
-    #Читаем из файла
-    with open(filename) as file_object:
-        stats.high_score = int(file_object.read())'''
 
 def draw_fon(screen):
     # Загрузка изображения корабля и получение прямоугольника.
