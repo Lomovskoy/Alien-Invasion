@@ -35,7 +35,7 @@ class Settings():
         #Отрисовка кодров в секунду
         self.fps_on = True
         #Кадров в секунду
-        self.FPS = 200
+        self.FPS = 120
         #адрес для коннекта
         self.connect_url = 'www.opgames.h1n.ru'
         #Адрес для обмена данными
