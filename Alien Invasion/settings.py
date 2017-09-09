@@ -36,6 +36,10 @@ class Settings():
         self.fps_on = True
         #Кадров в секунду
         self.FPS = 200
+        #адрес для коннекта
+        self.connect_url = 'www.opgames.h1n.ru'
+        #Адрес для обмена данными
+        self.get_set_irl = 'http://opgames.h1n.ru/record/controller.php'
         
     def initialize_dynamic_settings(self):
         """Инициализирует настройки, изменяющиеся в ходе игры."""
